@@ -1,0 +1,277 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --panel: #ffffff;
+  --text: #152033;
+  --muted: #5d6b82;
+  --border: #d9e1ec;
+  --accent: #295fe6;
+  --accent-soft: #e8efff;
+  --danger: #b72d3d;
+  --warning: #a05a00;
+  --success: #13795b;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app-shell {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.hero,
+.panel,
+.workstream-column {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(17, 32, 69, 0.06);
+}
+
+.hero,
+.panel {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+.hero-copy,
+.panel-header p,
+.item-meta,
+.empty-state,
+.summary-card span,
+.notes {
+  color: var(--muted);
+}
+
+.summary-grid,
+.board {
+  display: grid;
+  gap: 1rem;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-top: 1.25rem;
+}
+
+.summary-card {
+  padding: 1rem;
+  border-radius: 14px;
+  background: var(--accent-soft);
+}
+
+.summary-card strong {
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.item-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  background: #fff;
+  color: var(--text);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.notes-field,
+.item-form button {
+  grid-column: 1 / -1;
+}
+
+.primary,
+.secondary,
+.card-actions button {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.7rem 1rem;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.secondary,
+.card-actions button {
+  background: #fff;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.board {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: start;
+}
+
+.workstream-column {
+  padding: 1rem;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pill,
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.pill {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.status-pill[data-status='Blocked'] {
+  background: #fff0df;
+  color: var(--warning);
+}
+
+.status-pill[data-status='Complete'] {
+  background: #e8fff6;
+  color: var(--success);
+}
+
+.status-pill[data-status='In progress'] {
+  background: #ebf2ff;
+  color: var(--accent);
+}
+
+.status-pill[data-status='Planned'] {
+  background: #eef1f5;
+  color: var(--muted);
+}
+
+.item-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.item-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0.9rem;
+  background: #fcfdff;
+}
+
+.item-card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  margin-bottom: 0.75rem;
+}
+
+.notes {
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+
+.delete-button {
+  color: var(--danger);
+}
+
+.empty-state {
+  margin: 0;
+  padding: 1rem 0 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100% - 1rem, 1100px);
+  }
+
+  .hero,
+  .panel,
+  .workstream-column {
+    padding: 1rem;
+  }
+
+  .panel-header {
+    flex-direction: column;
+  }
+}
