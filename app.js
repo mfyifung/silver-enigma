@@ -226,11 +226,11 @@ form.addEventListener('submit', (event) => {
   const entry = {
     id: formData.get('id') || createId(),
     workstream: String(formData.get('workstream')),
-    title: String(formData.get('title')).trim(),
-    owner: String(formData.get('owner')).trim(),
-    status: String(formData.get('status')),
-    targetDate: String(formData.get('targetDate')),
-    notes: String(formData.get('notes')).trim(),
+    title: String(formData.get('title') || '').trim(),
+    owner: String(formData.get('owner') || '').trim(),
+    status: String(formData.get('status') || 'Planned'),
+    targetDate: String(formData.get('targetDate') || ''),
+    notes: String(formData.get('notes') || '').trim(),
     updatedAt: now
   };
 
