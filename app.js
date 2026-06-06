@@ -36,11 +36,22 @@ function formatDate(value) {
     return 'No target date';
   }
 
-  return new Date(`${value}T00:00:00`).toLocaleDateString(undefined, {
+  const [year, month, day] = value.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return date.toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   });
+}
+
+function createId() {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+
+  return `item-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function resetForm() {
@@ -64,7 +75,8 @@ function editItem(id) {
   form.elements.status.value = item.status;
   form.elements.targetDate.value = item.targetDate;
   form.elements.notes.value = item.notes;
-  formTitle.textContent = `Edit ${item.workstream.toLowerCase()} item`;
+  const workstreamLabel = item.workstream === 'QA' ? 'QA' : item.workstream.toLowerCase();
+  formTitle.textContent = `Edit ${workstreamLabel} item`;
   form.elements.title.focus();
 }
 
@@ -212,7 +224,7 @@ form.addEventListener('submit', (event) => {
   const formData = new FormData(form);
   const now = new Date().toISOString();
   const entry = {
-    id: formData.get('id') || crypto.randomUUID(),
+    id: formData.get('id') || createId(),
     workstream: String(formData.get('workstream')),
     title: String(formData.get('title')).trim(),
     owner: String(formData.get('owner')).trim(),
