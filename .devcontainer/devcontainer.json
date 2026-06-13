@@ -1,0 +1,100 @@
+{
+  // Basic devbox devcontainer template.
+  //
+  // THIS FILE (rendered per repo) IS THE CONTAINER AUTHORITY — image, runArgs,
+  // ports, env. `devbox up` consumes it via the official devcontainer CLI, and
+  // VS Code Dev Containers reads the same file, so one definition serves both.
+  // devbox-config.yaml is the registry/control plane (repos, dirs, clone URLs)
+  // and the GENERATION INPUT: `devbox setup --project` / `devbox gen-devcontainer`
+  // render this template into any repo that doesn't already carry a
+  // .devcontainer/devcontainer.json, substituting the __PLACEHOLDER__ values
+  // (name, port) plus image/network/java/egress from the config. A repo's
+  // EXISTING devcontainer.json is never overwritten (use gen-devcontainer
+  // --force to regenerate deliberately). To use by hand: copy to
+  // <your-repo>/.devcontainer/devcontainer.json and edit the placeholders.
+  "name": "silver-enigma (devbox)",
+
+  // The published devbox image (built by .devcontainer/build.sh). Swap for your
+  // own registry tag if you bake a project image on top.
+  "image": "localhost/devbox:latest",
+
+  "runArgs": [
+    // NET_ADMIN/NET_RAW + unconfined seccomp let the in-container egress firewall
+    // (init-firewall.sh) install its nftables rules.
+    "--cap-add=NET_ADMIN",
+    "--cap-add=NET_RAW",
+    "--security-opt",
+    "seccomp=unconfined", "--userns=keep-id",
+    // The container name. Keep it lowercase/digits/hyphens.
+    "--name",
+    "silver-enigma",
+    // Shared user-defined network so sibling boxes reach each other BY NAME
+    // (e.g. the frontend calls http://silver-enigma:8080). Create it once:
+    //   podman network create devnet   (or: docker network create devnet)
+    "--network=devbox-devbox",
+    // Publish the app port to the host: host:container. THIS is what actually
+    // makes localhost:8080 reachable from your machine.
+    "-p",
+    "8080:8080"
+  ],
+
+  // VS Code auto-forward hint (container-side ports). Harmless outside VS Code.
+  "forwardPorts": [8080],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "claudeCode.allowDangerouslySkipPermissions": true,
+        "claudeCode.initialPermissionMode": "bypassPermissions",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": { "path": "bash", "icon": "terminal-bash" },
+          "zsh": { "path": "zsh" }
+        }
+      }
+    }
+  },
+
+  "updateRemoteUserUID": false,
+  "remoteUser": "node",
+
+  // NOTE: do NOT volume-mount ~/.claude with the devbox image — the image bakes
+  // the agent/skill library into it, and a named volume would shadow it empty.
+  "mounts": [
+    "source=devbox-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=devbox-uv-cache-${devcontainerId},target=/home/node/.cache/uv,type=volume"
+  ],
+
+  "containerEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
+    // Inbox root + scheduler identity. The scheduler watches
+    // /workspace/.agent-inbox/$AGENT_NAME/ and dispatches each package to
+    // $TEAM_MEMBER_AGENT. AGENT_NAME must be lowercase/digits/hyphens.
+    "WORKSPACE_ROOT": "/workspace",
+    "AGENT_NAME": "silver-enigma",
+    "TEAM_MEMBER_AGENT": "dx-wf-team-member"
+  },
+
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+
+  "postCreateCommand": "echo \"alias claudex='claude --dangerously-skip-permissions'\" >> ~/.zshrc",
+
+  // Raise the egress firewall (arg 1 = desired Java major, "" to skip; arg 2 =
+  // comma-separated extra allowed hosts, "" for none), then start the in-container
+  // self-dispatch scheduler.
+  "postStartCommand": "sudo /usr/local/bin/init-firewall.sh \"21\" \"\"; /usr/local/bin/agent-scheduler-start.sh",
+  "waitFor": "postStartCommand",
+
+  "remoteEnv": {
+    "WAYLAND_DISPLAY": ""
+  }
+}
