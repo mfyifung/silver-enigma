@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Project management</p>
+        <h1>Track requirements, design, development, and QA rounds</h1>
+        <p class="hero-copy">Plan work, assign owners, update statuses, and keep each delivery stage visible in one lightweight dashboard.</p>
+      </div>
+      <div class="summary-grid" id="summary-grid" aria-label="Work summary"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2 id="form-title">Add work item</h2>
+          <p>Create or update an item for the current project lifecycle.</p>
+        </div>
+        <button id="reset-form" class="secondary" type="button">Clear form</button>
+      </div>
+      <form id="item-form" class="item-form">
+        <input id="item-id" name="id" type="hidden">
+        <label>
+          Workstream
+          <select id="workstream" name="workstream" required>
+            <option value="Requirement">Requirement</option>
+            <option value="Design">Design</option>
+            <option value="Development">Development task</option>
+            <option value="QA">QA round</option>
+          </select>
+        </label>
+        <label>
+          Title
+          <input id="title" name="title" type="text" maxlength="80" placeholder="e.g. Payment flow acceptance criteria" required>
+        </label>
+        <label>
+          Owner
+          <input id="owner" name="owner" type="text" maxlength="40" placeholder="e.g. Product, Design, Engineering">
+        </label>
+        <label>
+          Status
+          <select id="status" name="status" required>
+            <option value="Planned">Planned</option>
+            <option value="In progress">In progress</option>
+            <option value="Blocked">Blocked</option>
+            <option value="Complete">Complete</option>
+          </select>
+        </label>
+        <label>
+          Target date
+          <input id="targetDate" name="targetDate" type="date">
+        </label>
+        <label class="notes-field">
+          Notes
+          <textarea id="notes" name="notes" rows="3" maxlength="240" placeholder="Capture decisions, risks, or entry criteria."></textarea>
+        </label>
+        <button class="primary" type="submit">Save item</button>
+      </form>
+    </section>
+
+    <section class="board" id="board" aria-label="Project workstreams"></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
